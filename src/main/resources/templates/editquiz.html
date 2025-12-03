@@ -69,7 +69,7 @@
             margin-top: 5px;
         }
 
-        /* Submit button */
+        /* Buttons */
         .submit-button {
             width: 100%;
             padding: 12px;
@@ -81,8 +81,37 @@
             cursor: pointer;
         }
 
+        .home-button {
+            margin: 10px auto;
+            padding: 12px;
+            background-color: #2196F3;
+            text-align: center;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: white;
+        }
+
         .submit-button:hover {
             background-color: #1976D2;
+        }
+
+        .home-button:hover {
+            background-color: deeppink;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -92,7 +121,7 @@
     <div class="form-header">Edit Quiz</div>
 
     <!-- Form -->
-    <form th:action="@{/editQuestion}" method="post" th:object="${quiz}">
+    <form th:action="@{/editquiz}" method="post" th:object="${question}">
         <!-- Hidden field for quiz ID -->
         <input type="hidden" th:field="*{id}" />
 
@@ -106,20 +135,25 @@
         <!-- Options -->
         <div class="form-group">
             <label for="options">Options (comma-separated):</label>
-            <input type="text" id="options" th:value="${quiz.getOptionsAsString()}" name="options" required>
+            <input type="text" id="options" th:value="${question.getOptionsAsString()}" name="options" required>
             <span th:if="${#fields.hasErrors('options')}" th:errors="*{options}" class="error-message"></span>
+            <span th:if="${#fields.hasErrors('optionsAsString')}" th:errors="*{optionsAsString}" class="error-message"></span>
         </div>
 
         <!-- Correct Answer -->
         <div class="form-group">
             <label for="correctAnswer">Correct Answer:</label>
-            <input type="text" id="correctAnswer" th:field="*{correctAnswer}" required>
-            <span th:if="${#fields.hasErrors('correctAnswer')}" th:errors="*{correctAnswer}" class="error-message"></span>
+            <input type="text" id="correctAnswer" th:field="*{answer}" required>
+            <span th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}" class="error-message"></span>
         </div>
 
         <!-- Submit button -->
         <button type="submit" class="submit-button">Update Quiz</button>
+        <div class="home-button"><a th:href="@{/home}">Home</a></div>
     </form>
+</div>
+<div th:if="${param.error}" class="error">
+    Failed to edit quiz!
 </div>
 </body>
 </html>
