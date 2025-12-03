@@ -69,15 +69,15 @@
     <form th:action="@{/register}" method="post" class="form-group" th:object="${newUser}">
         <!-- Username -->
         <input type="text" name="username" placeholder="Username" th:field="*{username}" required>
-        <span th:if="${#field.hasErrors('username')}" th:error="*{username}" class="error"></span>
+        <span th:if="${#fields.hasErrors('username')}" th:error="*{username}" class="error"></span>
 
         <!-- Password -->
         <input type="password" name="password" placeholder="Password" th:field="*{password}" required>
-        <span th:if="${#field.hasErrors('password')}" th:error="*{password}" class="error"></span>
+        <span th:if="${#fields.hasErrors('password')}" th:error="*{password}" class="error"></span>
 
         <!-- Email -->
         <input type="email" name="email" placeholder="Email" th:field="*{email}" required>
-        <span th:if="${#field.hasErrors('email')}" th:error="*{email}" class="error"></span>
+        <span th:if="${#fields.hasErrors('email')}" th:error="*{email}" class="error"></span>
 
         <!-- Role Dropdown -->
         <select name="role" th:field="*{role}" required>
