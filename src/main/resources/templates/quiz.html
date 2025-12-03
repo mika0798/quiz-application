@@ -64,12 +64,12 @@
         <button type="submit" class="logout-button">Logout</button>
     </form>
 </div>
-<form th:action="@{/submitQuiz}" method="post">
-    <div th:each="quiz, iterStat : ${quizzes}" class="quiz-container">
-        <div class="question" th:text="${'Question ' + (iterStat.index + 1) + ': ' + quiz.questionText}"></div>
+<form th:action="@{/submitquiz}" method="post">
+    <div th:each="question, iterStat : ${questions}" class="quiz-container">
+        <div class="question" th:text="${'Question ' + (iterStat.index + 1) + ': ' + question.questionText}"></div>
         <div class="options">
             <ul>
-                <li th:each="option, optStat : ${quiz.options}">
+                <li th:each="option, optStat : ${question.options}">
                     <input type="radio" th:name="${'answer' + iterStat.index}" th:value="${option}" th:id="${'option' + iterStat.index + '-' + optStat.index}" required>
                     <label th:for="${'option' + iterStat.index + '-' + optStat.index}" th:text="${option}"></label>
                 </li>

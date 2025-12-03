@@ -82,6 +82,14 @@
         .logout-button:hover {
             background-color: #1976D2; /* Darker blue on hover */
         }
+
+        /* Error and Success Messages */
+
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -95,29 +103,32 @@
 
 <!-- Add Quiz Button -->
 <div style="padding: 20px;">
-    <a th:href="@{/addQuiz}">
+    <a th:href="@{/addquiz}">
         <button class="add-quiz-button">Add Quiz</button>
     </a>
 </div>
 
 <!-- Quiz List -->
 <div style="padding: 20px;">
-    <div th:each="quiz : ${quizzes}" class="quiz-container">
-        <div class="question" th:text="${'Question: ' + quiz.questionText}"></div>
+    <div th:each="question : ${questions}" class="quiz-container">
+        <div class="question" th:text="${'Question: ' + question.questionText}"></div>
         <div class="options">
             <ul>
-                <li th:each="option : ${quiz.options}" th:text="${option}"></li>
+                <li th:each="option : ${question.options}" th:text="${option}"></li>
             </ul>
         </div>
-        <div class="correct-answer" th:text="${'Correct Answer: ' + quiz.correctAnswer}"></div>
+        <div class="correct-answer" th:text="${'Correct Answer: ' + question.answer}"></div>
         <!-- Edit Button -->
-        <a th:href="@{/editQuiz/{id}(id=${quiz.id})}">
+        <a th:href="@{/editquiz/{id}(id=${question.id})}">
             <button class="edit-quiz-button">Edit Quiz</button>
         </a>
         <!-- Delete Button -->
-        <a th:href="@{/deleteQuiz/{id}(id=${quiz.id})}">
+        <a th:href="@{/deletequiz/{id}(id=${question.id})}">
             <button class="delete-quiz-button">Delete Quiz</button>
         </a>
+    </div>
+    <div th:if="${param.success}" class="success">
+        Edited quiz successfully!
     </div>
 </div>
 </body>
