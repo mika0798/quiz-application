@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 @Configuration
@@ -36,6 +37,24 @@ public class WebSecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
-
+    @Bean
+    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers("/quizlist","/addquiz","/editquiz","/deletequiz").hasRole("ADMIN")
+                        .requestMatchers("quiz","result").hasRole("USER")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .permitAll()
+                );
+        return http.build();
+    }
 
 }
