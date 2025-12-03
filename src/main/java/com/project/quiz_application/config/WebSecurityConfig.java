@@ -38,12 +38,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/register", "/login").permitAll()
                         .requestMatchers("/quizlist","/addquiz","/editquiz","/deletequiz").hasRole("ADMIN")
-                        .requestMatchers("quiz","result").hasRole("USER")
+                        .requestMatchers("/quiz","/result").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
