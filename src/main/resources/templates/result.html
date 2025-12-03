@@ -110,18 +110,18 @@
         <h3>Details:</h3>
         <ul>
             <!-- Iterate through quizzes and display correct/incorrect answers -->
-            <li th:each="quiz, iterStat : ${quizzes}">
+            <li th:each="question, iterStat : ${questions}">
                 <div>
-                    <strong th:text="${'Question ' + (iterStat.index + 1) + ': ' + quiz.questionText}"></strong>
+                    <strong th:text="${'Question ' + (iterStat.index + 1) + ': ' + question.questionText}"></strong>
                 </div>
                 <div>
                     <span>Your Answer: </span>
-                    <span th:class="${quiz.correctAnswer == userAnswers[iterStat.index] ? 'correct' : 'incorrect'}"
+                    <span th:class="${question.answer == userAnswers[iterStat.index] ? 'correct' : 'incorrect'}"
                           th:text="${userAnswers[iterStat.index]}"></span>
                 </div>
-                <div th:if="${quiz.correctAnswer != userAnswers[iterStat.index]}">
+                <div th:if="${question.answer != userAnswers[iterStat.index]}">
                     <span>Correct Answer: </span>
-                    <span class="correct" th:text="${quiz.correctAnswer}"></span>
+                    <span class="correct" th:text="${question.answer}"></span>
                 </div>
             </li>
         </ul>
