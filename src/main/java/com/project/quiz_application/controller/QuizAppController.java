@@ -59,7 +59,7 @@ public class QuizAppController {
         String role = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER"); // Set default if cannot find any authority
+                .orElse("ROLE_USER"); // Set default if service cannot find any authority
 
         if (role.equals("ROLE_ADMIN")) {
             List<Question> questions = questionService.getQuizzesList();
