@@ -114,15 +114,20 @@
                 <div>
                     <strong th:text="${'Question ' + (iterStat.index + 1) + ': ' + question.questionText}"></strong>
                 </div>
+
                 <div>
                     <span>Your Answer: </span>
-                    <span th:class="${question.answer == userAnswers[iterStat.index] ? 'correct' : 'incorrect'}"
-                          th:text="${userAnswers[iterStat.index]}"></span>
+                    <span th:if="${userAnswers[question.id] != null}"
+                          th:classappend="${question.answer == userAnswers[question.id]} ? ' correct' : ' incorrect'"
+                          th:text="${userAnswers[question.id]}"></span>
+                    <span th:if="${userAnswers[question.id] == null}" class="no-answer">No answer</span>
                 </div>
-                <div th:if="${question.answer != userAnswers[iterStat.index]}">
+
+                <div th:if="${question.answer != userAnswers[question.id]}">
                     <span>Correct Answer: </span>
                     <span class="correct" th:text="${question.answer}"></span>
                 </div>
+
             </li>
         </ul>
     </div>

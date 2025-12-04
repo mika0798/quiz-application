@@ -90,6 +90,11 @@
             margin-top: 10px;
         }
 
+        .delsuccess,.error {
+            color: red;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -129,6 +134,12 @@
     </div>
     <div th:if="${param.success}" class="success">
         Edited quiz successfully!
+    </div>
+    <div th:if="${param.delsuccess}" class="delsuccess">
+        Question has been deleted!
+    </div>
+    <div th:if="${param.error}" class="error">
+        Could not delete question!
     </div>
 </div>
 </body>
