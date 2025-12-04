@@ -24,6 +24,13 @@ public class Question {
     @NotBlank(message="Answer cannot be blank")
     private String answer;
 
+    public Question(String questionText, ArrayList<String> options, String answer) {
+        this.questionText = questionText;
+        this.options = options;
+        this.answer = answer;
+        this.id = null;
+    }
+
     public String getOptionsAsString() {
         return options == null ? "" : String.join(",", options);
     }

@@ -19,9 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class QuizAppController {
@@ -32,26 +30,31 @@ public class QuizAppController {
     @PostConstruct
     public void init() throws Exception {
         Question question1 = new Question(
-                questionService.getNextId(),
                 "What is the first letter in the alphabet?",
                 new ArrayList<>(Arrays.asList("D","A","Y","W")),
                 "A"
                 );
 
         Question question2 = new Question(
-                questionService.getNextId(),
                 "What year was Hitler born in?",
                 new ArrayList<>(Arrays.asList("1898","1881","1889","1890")),
                 "1889"
         );
+
+        Question question3 = new Question(
+                "How old am I?",
+                new ArrayList<>(Arrays.asList("23","18","56","33")),
+                "23"
+        );
         questionService.addQuiz(question1);
         questionService.addQuiz(question2);
+        questionService.addQuiz(question3);
         userDetailsService.registerUser(new User("admin","123","admin@email.com","ADMIN"));
         userDetailsService.registerUser(new User("user","123","user@gmail.com","USER"));
     }
 
     @Autowired
-    public QuizAppController(AuthenticationManager authenticationManager, QuizUserDetailsService userDetailsService) {
+    public QuizAppController(AuthenticationManager authenticationManager, QuizUserDetailsService userDetailsService, QuestionService questionService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.questionService = new QuestionService();
@@ -147,7 +150,6 @@ public class QuizAppController {
                 .findFirst()
                 .orElse("ROLE_USER");
         if (role.equals("ROLE_ADMIN")) {
-            question.setId(questionService.getNextId());
             if (questionService.addQuiz(question)) {
                 model.addAttribute("success","Added question successfully!");
                 return "redirect:/addquiz?success";
@@ -201,7 +203,60 @@ public class QuizAppController {
 
 
     /*---- Deleting Quiz API ----*/
+    @GetMapping("/deletequiz/{id}")
+    public String deleteQuiz(@PathVariable("id") int id, Model model, Authentication auth) {
+        String role = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER");
+
+        if (role.equals("ROLE_ADMIN")) {
+            if (questionService.deleteQuizById(id)) {
+                model.addAttribute("delsuccess","Question deleted!");
+                return "redirect:/home?delsuccess";
+            } else {
+                model.addAttribute("error","Could not delete the question!");
+                return "redirect:/home?error";
+            }
+
+        } else  {
+            model.addAttribute("error","You do not have permission to do this!");
+            return "redirect:/home";
+        }
+    }
 
     /*---- Submitting API ----*/
+    @PostMapping("/submitquiz")
+    public String submitQuiz(@RequestParam Map<String,String> allParams,Model model) {
+        Map<Integer, String> userAnswers = new HashMap<>();
+        for (Map.Entry<String, String> e : allParams.entrySet()) {
+            String key = e.getKey();
+            if (key.startsWith("answer_")) {
+                String idStr = key.substring("answer_".length());
+                try {
+                    Integer id = Integer.valueOf(idStr);
+                    userAnswers.put(id, e.getValue());
+                } catch (NumberFormatException ex) {
+                    // ignore / log
+                }
+            }
+        }
+        List<Question> questions = questionService.getQuizzesList();
+        int correct = 0;
+        int total = questions.size();
+
+        for (Question q : questions) {
+            String given = userAnswers.get(q.getId());
+            if (given != null && q.getAnswer() != null && q.getAnswer().equals(given)) {
+                correct++;
+            }
+        }
+
+        model.addAttribute("userAnswers",userAnswers);
+        model.addAttribute("correctAnswers",correct);
+        model.addAttribute("questions",questions);
+        model.addAttribute("totalQuestions",total);
+        return "result";
+    }
 
 }

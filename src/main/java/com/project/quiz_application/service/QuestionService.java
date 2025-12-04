@@ -3,14 +3,16 @@ package com.project.quiz_application.service;
 import com.project.quiz_application.model.Question;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
-    private final Map<Integer, Question> questions = new HashMap<>();
-    private Integer nextId = 1;
+    private final Map<Integer, Question> questions = new ConcurrentHashMap<>();
+    private final AtomicInteger nextId = new AtomicInteger(0);
 
     public ArrayList<Question> getQuizzesList() {
         return new ArrayList<>(questions.values());
@@ -21,22 +23,19 @@ public class QuestionService {
     }
 
     public int getNextId() {
-        return nextId++;
+        return nextId.getAndIncrement();
     }
 
     public boolean addQuiz(Question question) {
-        Integer id = question.getId();
-        if (questions.containsKey(id)) {
-            return false;
-        } else {
-            questions.put(id, question);
-            return true;
-        }
+        int id = nextId.getAndIncrement();
+        question.setId(id);
+        questions.put(question.getId(), question);
+        return true;
     }
 
     public boolean editQuiz(Question question) {
         Integer id = question.getId();
-        if (questions.containsKey(id)) {
+        if (id != null && questions.containsKey(id)) {
             questions.put(id, question);
             return true;
         } else {
@@ -45,22 +44,19 @@ public class QuestionService {
     }
 
     public boolean deleteQuizById(int id) {
-        if (questions.containsKey(id)) {
-            questions.remove(id);
-            return true;
-        } else  {
-            return false;
-        }
+        return questions.remove(id) != null;
     }
 
-    public int submitQuiz(ArrayList<Question> submission) {
-        int count = 0;
-        for (Question sub : submission) {
-            Question res = questions.get(sub.getId());
-            if (sub.getAnswer().equals(res.getAnswer())) {
-                count++;
-            }
-        }
-        return count;
+    public List<Question> findAllByIds(Collection<Integer> ids) {
+        return ids.stream()
+                .map(questions::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    public boolean isCorrect(Integer id, String givenAnswer) {
+        Question q = questions.get(id);
+        if (q == null || givenAnswer == null) return false;
+        return givenAnswer.equals(q.getAnswer());
     }
 }
