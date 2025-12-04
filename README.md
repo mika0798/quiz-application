@@ -1,6 +1,7 @@
 # 1. Introduction
 Simple in-memory quiz application built with Spring Boot and Thymeleaf. Stores users and questions in memory; suitable for learning and prototyping.
 
+![screenshots](screenshots/cutclip.gif)
 # 2. Role
 Role: Backend developer  
 Responsibilities: implement controllers, services, security configuration, and in-memory data management for users and questions.
