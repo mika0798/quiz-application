@@ -11,7 +11,6 @@ Responsibilities: implement controllers, services, security configuration, and i
 - Spring Security
 - Thymeleaf templates
 - Maven
-- JUnit (basic tests)
 
 Key backend classes:
 - com.project.quiz_application.QuizApplicationInmemoryApplication
