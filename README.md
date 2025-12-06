@@ -1,5 +1,5 @@
 # 1. Introduction
-Simple in-memory quiz application built with Spring Boot and Thymeleaf. Stores users and questions in memory; suitable for learning and prototyping.
+Simple in-memory quiz application built with Spring Boot, Thymeleaf and Spring Security. Stores users and questions in memory; suitable for learning and prototyping.
 
 ![screenshots](screenshots/cutclip.gif)
 # 2. Role
